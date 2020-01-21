@@ -98,6 +98,25 @@ public class MyRunner implements CommandLineRunner {
 
         verifNbElement("T", ligneToTab);
 
+        if (String.valueOf(ligneToTab[0].toUpperCase().charAt(0)).equals("T")) {
+            String gradeTech = ligneToTab[5];
+            try {
+                Integer.parseInt(gradeTech);
+            } catch (Exception e) {
+                throw new BatchException("Le grade du technicien est incorrect : " + gradeTech);
+            }
+
+            if (!gradeTech.matches("[1-5]")) {
+                throw new BatchException("Le grade doit être compris entre 1 et 5 : " + gradeTech);
+            }
+
+            String matManager = ligneToTab[6];
+            if (!matManager.matches(REGEX_MATRICULE_MANAGER)) {
+                throw new BatchException("la chaine " + matManager + " ne respecte pas l'expression régulière ^M[0-9]{5}$");
+            }
+        }
+
+
         if (!ligneToTab[0].matches(REGEX_MATRICULE)) {
             throw new BatchException("La chaine " + ligneToTab[0] + " ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
         }
