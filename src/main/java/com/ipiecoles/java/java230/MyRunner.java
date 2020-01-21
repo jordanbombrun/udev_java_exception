@@ -67,8 +67,12 @@ public class MyRunner implements CommandLineRunner {
             throw new BatchException("La ligne manager ne contient pas 5 éléments mais " + ligneToTab.length);
         }
 
-        //String date = ligneToTab[3];
-        //DateTimeFormat.forPattern("dd/MM/yyyy").parseLocalDate(date);
+        String date = ligneToTab[3];
+        try {
+            DateTimeFormat.forPattern("dd/MM/yyyy").parseLocalDate(date);
+        } catch (Exception e) {
+            throw new BatchException(date + " ne respecte pas le formation de date dd/MM/yyyy");
+        }
 
         if (!ligne.matches(REGEX_MATRICULE)) {
             throw new BatchException("La chaine ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
