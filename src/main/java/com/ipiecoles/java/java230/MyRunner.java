@@ -96,7 +96,7 @@ public class MyRunner implements CommandLineRunner {
             }
         }
 
-
+        verifNbElement("T", ligneToTab);
 
         if (!ligneToTab[0].matches(REGEX_MATRICULE)) {
             throw new BatchException("La chaine " + ligneToTab[0] + " ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
