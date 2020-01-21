@@ -55,7 +55,6 @@ public class MyRunner implements CommandLineRunner {
      */
     private void processLine(String ligne) throws BatchException {
         //TODO
-        //System.out.println(ligne);
         String[] ligneToTab = ligne.split(",");
 
         if (!ligne.matches(REGEX_TYPE)) {
@@ -68,7 +67,7 @@ public class MyRunner implements CommandLineRunner {
         try {
             DateTimeFormat.forPattern("dd/MM/yyyy").parseLocalDate(date);
         } catch (Exception e) {
-            throw new BatchException(date + " ne respecte pas le formation de date dd/MM/yyyy");
+            throw new BatchException(date + " ne respecte pas le format de date dd/MM/yyyy");
         }
 
         String salaire = ligneToTab[4];
@@ -121,11 +120,6 @@ public class MyRunner implements CommandLineRunner {
             } catch (Exception e) {
                 throw new BatchException("Le manager de matricule " + matManager + " n'a pas été trouvé dans le fichier ou en base de données");
             }
-            /*
-            Employe technicien = employeRepository.findByMatricule(matManager);
-            if (!technicien) {
-                throw new BatchException("Le manager de matricule " + matManager + " n'a pas été trouvé dans le fichier ou en base de données");
-            }*/
         }
 
 
