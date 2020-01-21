@@ -4,6 +4,8 @@ import com.ipiecoles.java.java230.exceptions.BatchException;
 import com.ipiecoles.java.java230.model.Employe;
 import com.ipiecoles.java.java230.repository.EmployeRepository;
 import com.ipiecoles.java.java230.repository.ManagerRepository;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +46,6 @@ public class MyRunner implements CommandLineRunner {
     public void run(String... strings) throws Exception { //throws Exception
         String fileName = "employes.csv";
         readFile(fileName);
-        //readFile(strings[0]);
-        //List<Employe> listEmp = readFile("employes.csv")
-
     }
 
     /**
@@ -57,9 +56,25 @@ public class MyRunner implements CommandLineRunner {
      */
     private void processLine(String ligne) throws BatchException {
         //TODO
+        //System.out.println(ligne);
+        String[] ligneToTab = ligne.split(",");
+
         if (!ligne.matches(REGEX_TYPE)) {
             throw new BatchException("Type d'employé inconnu : " + ligne.charAt(0));
         }
+
+        if (String.valueOf(ligne.toUpperCase().charAt(0)).equals("M") && ligneToTab.length != NB_CHAMPS_MANAGER) {
+            throw new BatchException("La ligne manager ne contient pas 5 éléments mais " + ligneToTab.length);
+        }
+
+        //String date = ligneToTab[3];
+        //DateTimeFormat.forPattern("dd/MM/yyyy").parseLocalDate(date);
+
+        if (!ligne.matches(REGEX_MATRICULE)) {
+            throw new BatchException("La chaine ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
+        }
+
+
     }
 
     /**
