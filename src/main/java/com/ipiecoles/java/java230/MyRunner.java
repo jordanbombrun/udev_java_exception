@@ -4,8 +4,6 @@ import com.ipiecoles.java.java230.exceptions.BatchException;
 import com.ipiecoles.java.java230.model.Employe;
 import com.ipiecoles.java.java230.repository.EmployeRepository;
 import com.ipiecoles.java.java230.repository.ManagerRepository;
-import org.hibernate.engine.jdbc.batch.spi.Batch;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +62,7 @@ public class MyRunner implements CommandLineRunner {
             throw new BatchException("Type d'employé inconnu : " + ligne.charAt(0));
         }
 
-        if (String.valueOf(ligne.toUpperCase().charAt(0)).equals("M") && ligneToTab.length != NB_CHAMPS_MANAGER) {
-            throw new BatchException("La ligne manager ne contient pas 5 éléments mais " + ligneToTab.length);
-        }
+        verifNbElement("M", ligneToTab);
 
         String date = ligneToTab[3];
         try {
@@ -82,6 +78,7 @@ public class MyRunner implements CommandLineRunner {
             throw new BatchException(salaire + " n'est pas un nombre valide pour un salaire");
         }
 
+        verifNbElement("C", ligneToTab);
 
         if (!ligneToTab[0].matches(REGEX_MATRICULE)) {
             throw new BatchException("La chaine " + ligneToTab[0] + " ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
@@ -107,10 +104,37 @@ public class MyRunner implements CommandLineRunner {
                 processLine(ligne);
             } catch (BatchException e) {
                 System.out.println("Ligne " + i + " : " + e.getMessage() + " => " + ligne);
-
             }
         }
         return employes;
+    }
+
+    /**
+     * Méthode qui vérifie le nombre d'éléments séparés par une virgule sur une ligne
+     *
+     * @param lettre lettre à tester
+     * @param ligneToTab ligne tranformée en tableau (split par ",")
+     */
+    private void verifNbElement(String lettre, String[] ligneToTab) throws BatchException {
+        String emp = "";
+        int nb_champs = 0;
+        switch (lettre) {
+            case "M" :
+                emp = "manager";
+                nb_champs = NB_CHAMPS_MANAGER;
+                break;
+            case "C" :
+                emp = "commercial";
+                nb_champs = NB_CHAMPS_COMMERCIAL;
+                break;
+            case "T" :
+                emp = "technicien";
+                nb_champs = NB_CHAMPS_TECHNICIEN;
+                break;
+        }
+        if (String.valueOf(ligneToTab[0].toUpperCase().charAt(0)).equals(lettre) && ligneToTab.length != nb_champs) {
+            throw new BatchException("La ligne " + emp + " ne contient pas "+ nb_champs + " éléments mais " + ligneToTab.length);
+        }
     }
 
 
