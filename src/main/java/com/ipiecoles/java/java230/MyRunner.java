@@ -4,6 +4,7 @@ import com.ipiecoles.java.java230.exceptions.BatchException;
 import com.ipiecoles.java.java230.model.Employe;
 import com.ipiecoles.java.java230.repository.EmployeRepository;
 import com.ipiecoles.java.java230.repository.ManagerRepository;
+import org.hibernate.engine.jdbc.batch.spi.Batch;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
@@ -74,8 +75,16 @@ public class MyRunner implements CommandLineRunner {
             throw new BatchException(date + " ne respecte pas le formation de date dd/MM/yyyy");
         }
 
-        if (!ligne.matches(REGEX_MATRICULE)) {
-            throw new BatchException("La chaine ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
+        String salaire = ligneToTab[4];
+        try {
+            Double.parseDouble(salaire);
+        } catch (Exception e) {
+            throw new BatchException(salaire + " n'est pas un nombre valide pour un salaire");
+        }
+
+
+        if (!ligneToTab[0].matches(REGEX_MATRICULE)) {
+            throw new BatchException("La chaine " + ligneToTab[0] + " ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
         }
 
 
