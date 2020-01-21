@@ -114,6 +114,18 @@ public class MyRunner implements CommandLineRunner {
             if (!matManager.matches(REGEX_MATRICULE_MANAGER)) {
                 throw new BatchException("la chaine " + matManager + " ne respecte pas l'expression régulière ^M[0-9]{5}$");
             }
+
+            try {
+                Employe technicien = employeRepository.findByMatricule(matManager);
+                technicien.toString();
+            } catch (Exception e) {
+                throw new BatchException("Le manager de matricule " + matManager + " n'a pas été trouvé dans le fichier ou en base de données");
+            }
+            /*
+            Employe technicien = employeRepository.findByMatricule(matManager);
+            if (!technicien) {
+                throw new BatchException("Le manager de matricule " + matManager + " n'a pas été trouvé dans le fichier ou en base de données");
+            }*/
         }
 
 
@@ -149,28 +161,28 @@ public class MyRunner implements CommandLineRunner {
     /**
      * Méthode qui vérifie le nombre d'éléments séparés par une virgule sur une ligne
      *
-     * @param lettre lettre à tester
+     * @param lettre     lettre à tester
      * @param ligneToTab ligne tranformée en tableau (split par ",")
      */
     private void verifNbElement(String lettre, String[] ligneToTab) throws BatchException {
         String emp = "";
         int nb_champs = 0;
         switch (lettre) {
-            case "M" :
+            case "M":
                 emp = "manager";
                 nb_champs = NB_CHAMPS_MANAGER;
                 break;
-            case "C" :
+            case "C":
                 emp = "commercial";
                 nb_champs = NB_CHAMPS_COMMERCIAL;
                 break;
-            case "T" :
+            case "T":
                 emp = "technicien";
                 nb_champs = NB_CHAMPS_TECHNICIEN;
                 break;
         }
         if (String.valueOf(ligneToTab[0].toUpperCase().charAt(0)).equals(lettre) && ligneToTab.length != nb_champs) {
-            throw new BatchException("La ligne " + emp + " ne contient pas "+ nb_champs + " éléments mais " + ligneToTab.length);
+            throw new BatchException("La ligne " + emp + " ne contient pas " + nb_champs + " éléments mais " + ligneToTab.length);
         }
     }
 
