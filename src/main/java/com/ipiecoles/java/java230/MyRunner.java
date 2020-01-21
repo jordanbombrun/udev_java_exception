@@ -87,7 +87,16 @@ public class MyRunner implements CommandLineRunner {
             } catch (Exception e) {
                 throw new BatchException("Le chiffre d'affaire du commercial est incorrect");
             }
+
+            String perfCom = ligneToTab[6];
+            try {
+                Double.parseDouble(perfCom);
+            } catch (Exception e) {
+                throw new BatchException("La performance du commercial est incorrecte");
+            }
         }
+
+
 
         if (!ligneToTab[0].matches(REGEX_MATRICULE)) {
             throw new BatchException("La chaine " + ligneToTab[0] + " ne respecte pas l'expression régulière ^[MTC][0-9]{5}$");
